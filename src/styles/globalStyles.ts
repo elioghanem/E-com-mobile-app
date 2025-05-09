@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions, PixelRatio } from 'react-native';
+import { ThemeColors } from '../context/ThemeContext';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -19,22 +20,9 @@ export const spacing = {
   xxl: normalize(48),
 };
 
-// Border radius scale
-export const borderRadius = {
-  sm: normalize(4),
-  md: normalize(8),
-  lg: normalize(16),
-  xl: normalize(24),
-  round: 9999,
-};
-
 // Create responsive styles
-export const createStyles = (colors: any) => StyleSheet.create({
+export const createStyles = (colors: ThemeColors) => StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  safeArea: {
     flex: 1,
     backgroundColor: colors.background,
   },
@@ -61,7 +49,7 @@ export const createStyles = (colors: any) => StyleSheet.create({
   button: {
     backgroundColor: colors.primary,
     padding: spacing.md,
-    borderRadius: borderRadius.md,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -74,14 +62,14 @@ export const createStyles = (colors: any) => StyleSheet.create({
     backgroundColor: colors.inputBackground,
     borderWidth: 1,
     borderColor: colors.border,
-    borderRadius: borderRadius.md,
+    borderRadius: 8,
     padding: spacing.md,
     fontSize: normalize(16),
     color: colors.text,
   },
   card: {
     backgroundColor: colors.background,
-    borderRadius: borderRadius.lg,
+    borderRadius: 8,
     padding: spacing.md,
     marginVertical: spacing.sm,
     shadowColor: colors.text,

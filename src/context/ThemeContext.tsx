@@ -1,6 +1,15 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useColorScheme } from 'react-native';
 
+export interface ThemeColors {
+  primary: string;
+  secondary: string;
+  background: string;
+  text: string;
+  border: string;
+  error: string;
+}
+
 type ThemeContextType = {
   isDarkMode: boolean;
   toggleTheme: () => void;

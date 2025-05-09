@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   View,
   Text,
@@ -8,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import React, { useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -16,7 +16,6 @@ import { createStyles, spacing } from '../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
-
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -31,7 +30,8 @@ const LoginScreen = () => {
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
   const { login } = useAuth();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const {
     control,
@@ -50,16 +50,19 @@ const LoginScreen = () => {
       data.email === 'eurisko@gmail.com' &&
       data.password === 'academy2025'
     ) {
+      setErrorMessage('');
       login();
       (navigation as any).navigate('CodeVerification');
-    } else {
-      // Optionally show error
-      console.log('Invalid credentials');
+    } if(
+      data.email !== 'eurisko@gmail.com' ||
+      data.password !== 'academy2025'
+    ) {
+      setErrorMessage('Invalid email or password');
     }
   };
 
   return (
-    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}> 
+    <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <TouchableOpacity
         style={{
           position: 'absolute',
@@ -73,11 +76,15 @@ const LoginScreen = () => {
         onPress={toggleTheme}
         activeOpacity={0.7}
       >
-        <Text style={{ color: '#fff', fontSize: 20 }}>{isDarkMode ? '🌞' : '🌙'}</Text>
+        <Text style={{ color: '#fff', fontSize: 20 }}>
+          {isDarkMode ? '🌞' : '🌙'}
+        </Text>
       </TouchableOpacity>
+
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}>
+        style={{ flex: 1 }}
+      >
         <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
           <Text style={styles.heading}>Login</Text>
 
@@ -137,17 +144,26 @@ const LoginScreen = () => {
               )}
             />
 
+            {/* Show login error message */}
+            {errorMessage !== '' && (
+              <Text style={[styles.errorText, { marginTop: 10 }]}>{errorMessage}</Text>
+            )}
+
             <TouchableOpacity
               style={styles.button}
-              onPress={handleSubmit(onSubmit)}>
+              onPress={handleSubmit(onSubmit)}
+            >
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
           </View>
 
           <TouchableOpacity
             style={{ marginTop: spacing.lg, alignItems: 'center' }}
-            onPress={() => (navigation as any).navigate('SignUp', { fromLogin: true })}>
-            <Text style={[styles.text, { color: colors.primary }]}>Don't have an account? Sign Up</Text>
+            onPress={() => (navigation as any).navigate('SignUp', { fromLogin: true })}
+          >
+            <Text style={[styles.text, { color: colors.primary }]}>
+              Don't have an account? Sign Up
+            </Text>
           </TouchableOpacity>
         </ScrollView>
       </KeyboardAvoidingView>
@@ -155,4 +171,4 @@ const LoginScreen = () => {
   );
 };
 
-export default LoginScreen; 
+export default LoginScreen;
