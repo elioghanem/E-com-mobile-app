@@ -59,7 +59,7 @@ export const createStyles = (colors: ThemeColors) => StyleSheet.create({
     fontWeight: '600',
   },
   input: {
-    backgroundColor: colors.inputBackground,
+    backgroundColor: colors.background,
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: 8,
