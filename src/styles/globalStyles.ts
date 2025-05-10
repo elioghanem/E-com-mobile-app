@@ -97,4 +97,16 @@ export const createStyles = (colors: ThemeColors) => StyleSheet.create({
     fontSize: normalize(14),
     marginTop: spacing.xs,
   },
+  gradientBackground: {
+    backgroundColor: 'rgba(255, 59, 48, 0.1)', // Light red
+  },
+  highlightBackground: {
+    backgroundColor: 'rgba(255, 149, 0, 0.1)', // Light orange
+  },
+  accentBorder: {
+    borderColor: 'rgba(255, 59, 48, 0.3)', // Semi-transparent red
+  },
+  accentBackground: {
+    backgroundColor: 'rgba(255, 149, 0, 0.2)', // Semi-transparent orange
+  },
 }); 

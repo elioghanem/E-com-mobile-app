@@ -19,23 +19,23 @@ type ThemeContextType = {
 const lightColors = {
   background: '#FFFFFF',
   text: '#333333',
-  primary: '#007AFF',
-  secondary: '#5856D6',
-  border: '#E5E5EA',
-  inputBackground: '#F2F2F7',
-  error: '#FF3B30',
-  success: '#34C759',
+  primary: '#FF3B30',
+  secondary: '#FF9500',
+  border: '#FFE5E5',
+  inputBackground: '#FFF5F5',
+  error: '#FF0000',
+  success: '#FF9500',
 };
 
 const darkColors = {
-  background: '#000000',
+  background: '#1A1A1A',
   text: '#FFFFFF',
-  primary: '#0A84FF',
-  secondary: '#5E5CE6',
-  border: '#38383A',
-  inputBackground: '#1C1C1E',
-  error: '#FF453A',
-  success: '#32D74B',
+  primary: '#FF453A',
+  secondary: '#FF9F0A',
+  border: '#4D0000',
+  inputBackground: '#2A0000',
+  error: '#FF3B30',
+  success: '#FF9F0A',
 };
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);

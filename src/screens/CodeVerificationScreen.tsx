@@ -65,7 +65,11 @@ const CodeVerificationScreen = () => {
           <TextInput
             key={idx}
             ref={inputRefs[idx]}
-            style={[localStyles.input, { color: colors.text, borderColor: colors.primary }]}
+            style={[localStyles.input, { 
+              color: '#FFFFFF',
+              borderColor: colors.primary,
+              backgroundColor: '#000000'
+            }]}
             value={digit}
             onChangeText={(text) => handleChange(text, idx)}
             onKeyPress={(e) => handleKeyPress(e, idx)}

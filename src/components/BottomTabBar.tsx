@@ -5,6 +5,7 @@ import { useTheme } from '../context/ThemeContext';
 const TABS = [
   { key: 'Home', icon: '🏠', label: 'Home' },
   { key: 'Cart', icon: '🛒', label: 'Cart' },
+  { key: 'Likes', icon: '❤️', label: 'Likes' },
   { key: 'Profile', icon: '👤', label: 'Profile' },
 ];
 
@@ -32,14 +33,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     alignItems: 'center',
-    height: 64,
+    height: Platform.OS === 'ios' ? 84 : 60,
     borderTopWidth: 1,
     position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
     zIndex: 100,
-    paddingBottom: Platform.OS === 'ios' ? 16 : 0,
+    paddingBottom: Platform.OS === 'ios' ? 20 : 0,
     backgroundColor: '#fff',
   },
   tab: {
