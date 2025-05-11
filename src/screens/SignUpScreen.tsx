@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
+  Dimensions,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -39,6 +40,15 @@ const SignUpScreen = () => {
   const styles = createStyles(colors);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+  const [dimensions, setDimensions] = useState(Dimensions.get('window'));
+
+  useEffect(() => {
+    const subscription = Dimensions.addEventListener('change', ({ window }) => {
+      setDimensions(window);
+    });
+
+    return () => subscription?.remove();
+  }, []);
 
   const {
     control,
@@ -76,12 +86,25 @@ const SignUpScreen = () => {
         <Text style={{ color: '#fff', fontSize: 20 }}>{isDarkMode ? '🌞' : '🌙'}</Text>
       </TouchableOpacity>
       <KeyboardAvoidingView
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        style={{ flex: 1 }}>
-        <ScrollView contentContainerStyle={styles.content}>
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        style={{ flex: 1 }}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 64 : 0}
+      >
+        <ScrollView 
+          style={{ flex: 1 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: spacing.md,
+            paddingTop: spacing.xl,
+            paddingBottom: spacing.xxl + insets.bottom,
+          }}
+          keyboardShouldPersistTaps="handled"
+          showsVerticalScrollIndicator={false}
+          bounces={false}
+        >
           <Text style={styles.heading}>Create Account</Text>
 
-          <View style={{ gap: spacing.md }}>
+          <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
             <Controller
               control={control}
               name="name"
@@ -169,15 +192,19 @@ const SignUpScreen = () => {
             />
 
             <TouchableOpacity
-              style={styles.button}
-              onPress={handleSubmit(onSubmit)}>
+              style={[styles.button, { marginTop: spacing.md }]}
+              onPress={handleSubmit(onSubmit)}
+            >
               <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={{ marginTop: spacing.lg, alignItems: 'center' }}
-              onPress={() => (navigation as any).navigate('Login', { fromSignUp: true })}>
-              <Text style={[styles.text, { color: colors.primary }]}>Already have an account? Login</Text>
+              onPress={() => (navigation as any).navigate('Login', { fromSignUp: true })}
+            >
+              <Text style={[styles.text, { color: colors.primary }]}>
+                Already have an account? Login
+              </Text>
             </TouchableOpacity>
           </View>
         </ScrollView>
