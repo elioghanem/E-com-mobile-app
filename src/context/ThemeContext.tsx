@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import { useColorScheme } from 'react-native';
+import { theme } from '../theme';
 
 export interface ThemeColors {
   primary: string;
@@ -14,6 +15,7 @@ type ThemeContextType = {
   isDarkMode: boolean;
   toggleTheme: () => void;
   colors: typeof lightColors;
+  typography: typeof theme.typography;
 };
 
 const lightColors = {
@@ -55,7 +57,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const colors = isDarkMode ? darkColors : lightColors;
 
   return (
-    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, colors }}>
+    <ThemeContext.Provider value={{ isDarkMode, toggleTheme, colors, typography: theme.typography }}>
       {children}
     </ThemeContext.Provider>
   );

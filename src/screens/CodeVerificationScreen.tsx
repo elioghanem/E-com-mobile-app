@@ -10,9 +10,10 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import { createStyles, spacing } from '../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
+import { FONTS } from '../theme/fonts';
 
 const CodeVerificationScreen = () => {
-  const { colors } = useTheme();
+  const { colors, typography } = useTheme();
   const styles = createStyles(colors);
   const navigation = useNavigation();
   const [code, setCode] = useState(['', '', '', '']);
@@ -51,25 +52,89 @@ const CodeVerificationScreen = () => {
     }
   };
 
+  const customStyles = StyleSheet.create({
+    container: {
+      flex: 1,
+      backgroundColor: colors.background,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    pageTitle: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 28,
+      fontWeight: 'bold',
+      color: colors.text,
+      textAlign: 'center',
+      marginBottom: spacing.lg,
+    },
+    subtitle: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      fontWeight: 'normal',
+      color: colors.secondary,
+      textAlign: 'center',
+      marginBottom: spacing.xl,
+      paddingHorizontal: spacing.lg,
+    },
+    codeContainer: {
+      flexDirection: 'row',
+      justifyContent: 'center',
+      gap: spacing.md,
+      marginVertical: spacing.xl,
+    },
+    codeInput: {
+      width: 48,
+      height: 56,
+      borderWidth: 2,
+      borderRadius: 12,
+      fontSize: 28,
+      fontFamily: FONTS.primary.regular,
+      textAlign: 'center',
+      marginHorizontal: 8,
+      color: '#FFFFFF',
+      borderColor: colors.primary,
+      backgroundColor: '#000000',
+    },
+    errorText: {
+      fontFamily: FONTS.primary.regular,
+      color: colors.error,
+      fontSize: 14,
+      marginTop: spacing.md,
+      textAlign: 'center',
+    },
+    backButton: {
+      position: 'absolute',
+      top: 60,
+      left: 20,
+      zIndex: 1,
+    },
+    backButtonText: {
+      fontSize: 40,
+      color: colors.primary,
+      fontFamily: FONTS.primary.regular,
+    },
+  });
+
   return (
-    <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}> 
+    <View style={customStyles.container}> 
       <TouchableOpacity
-        style={{ position: 'absolute', top: 60, left: 20, zIndex: 1 }}
+        style={customStyles.backButton}
         onPress={() => (navigation as any).navigate('Login')}
       >
-        <Text style={{ fontSize: 40, color: colors.primary }}>{'←'}</Text>
+        <Text style={customStyles.backButtonText}>{'←'}</Text>
       </TouchableOpacity>
-      <Text style={styles.heading}>Enter Verification Code</Text>
-      <View style={localStyles.codeContainer}>
+      
+      <Text style={customStyles.pageTitle}>Enter Verification Code</Text>
+      <Text style={customStyles.subtitle}>
+        We've sent a verification code to your email. Please enter it below.
+      </Text>
+      
+      <View style={customStyles.codeContainer}>
         {code.map((digit, idx) => (
           <TextInput
             key={idx}
             ref={inputRefs[idx]}
-            style={[localStyles.input, { 
-              color: '#FFFFFF',
-              borderColor: colors.primary,
-              backgroundColor: '#000000'
-            }]}
+            style={customStyles.codeInput}
             value={digit}
             onChangeText={(text) => handleChange(text, idx)}
             onKeyPress={(e) => handleKeyPress(e, idx)}
@@ -80,28 +145,10 @@ const CodeVerificationScreen = () => {
           />
         ))}
       </View>
-      {error ? <Text style={{ color: colors.error, marginTop: spacing.md }}>{error}</Text> : null}
+      
+      {error ? <Text style={customStyles.errorText}>{error}</Text> : null}
     </View>
   );
 };
-
-const localStyles = StyleSheet.create({
-  codeContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: spacing.md,
-    marginVertical: spacing.xl,
-  },
-  input: {
-    width: 48,
-    height: 56,
-    borderWidth: 2,
-    borderRadius: 12,
-    fontSize: 28,
-    textAlign: 'center',
-    marginHorizontal: 8,
-    backgroundColor: '#F2F2F7',
-  },
-});
 
 export default CodeVerificationScreen; 

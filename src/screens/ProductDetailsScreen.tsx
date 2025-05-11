@@ -5,9 +5,10 @@ import { spacing } from '../styles/globalStyles';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import productsData from '../Products.json';
+import { FONTS } from '../theme/fonts';
 
 const ProductDetailsScreen = () => {
-  const { colors, isDarkMode, toggleTheme } = useTheme();
+  const { colors, isDarkMode, toggleTheme, typography } = useTheme();
   const route = useRoute();
   const navigation = useNavigation();
   const [dropdownVisible, setDropdownVisible] = React.useState(false);
@@ -42,6 +43,12 @@ const ProductDetailsScreen = () => {
       alignItems: 'center',
       justifyContent: 'center',
     },
+    backButtonText: {
+      fontSize: 26,
+      fontWeight: 'bold',
+      color: colors.text,
+      fontFamily: FONTS.primary.regular,
+    },
     iconButton: {
       width: 36,
       height: 36,
@@ -49,6 +56,11 @@ const ProductDetailsScreen = () => {
       alignItems: 'center',
       justifyContent: 'center',
       marginLeft: spacing.sm,
+    },
+    themeToggleText: {
+      color: '#fff', 
+      fontSize: 20,
+      fontFamily: FONTS.primary.regular,
     },
     image: {
       height: 300,
@@ -61,12 +73,14 @@ const ProductDetailsScreen = () => {
       fontWeight: 'bold',
       marginBottom: spacing.sm,
       color: colors.text,
+      fontFamily: FONTS.primary.regular,
     },
     price: {
       fontSize: 22,
       fontWeight: '600',
       marginBottom: spacing.md,
       color: colors.primary,
+      fontFamily: FONTS.primary.regular,
     },
     description: {
       fontSize: 16,
@@ -74,6 +88,7 @@ const ProductDetailsScreen = () => {
       opacity: 0.9,
       lineHeight: 24,
       color: colors.text,
+      fontFamily: FONTS.primary.regular,
     },
     buttonRow: {
       flexDirection: 'row',
@@ -92,6 +107,7 @@ const ProductDetailsScreen = () => {
       fontSize: 16,
       fontWeight: 'bold',
       color: colors.text,
+      fontFamily: FONTS.primary.regular,
     },
     dropdown: {
       position: 'absolute',
@@ -113,12 +129,14 @@ const ProductDetailsScreen = () => {
     dropdownText: {
       fontSize: 16,
       color: colors.text,
+      fontFamily: FONTS.primary.regular,
     },
     heading: {
       fontSize: 26,
       fontWeight: 'bold',
       marginBottom: spacing.sm,
       color: colors.text,
+      fontFamily: FONTS.primary.regular,
     },
     text: {
       fontSize: 16,
@@ -126,7 +144,38 @@ const ProductDetailsScreen = () => {
       opacity: 0.9,
       lineHeight: 24,
       color: colors.text,
+      fontFamily: FONTS.primary.regular,
     },
+    productNotFound: {
+      color: colors.text,
+      fontSize: 20,
+      fontFamily: FONTS.primary.regular,
+    },
+    category: {
+      fontSize: 14,
+      color: colors.secondary,
+      marginBottom: spacing.sm,
+      fontFamily: FONTS.primary.regular,
+    },
+    buyNowButton: {
+      flex: 1,
+      paddingVertical: 14,
+      borderRadius: 12,
+      alignItems: 'center',
+      backgroundColor: colors.primary,
+    },
+    buyNowText: {
+      fontSize: 16,
+      fontWeight: 'bold',
+      color: '#FFFFFF',
+      fontFamily: FONTS.primary.regular,
+    },
+    noImageText: {
+      fontFamily: FONTS.primary.regular,
+      color: colors.text,
+      fontSize: 16,
+      textAlign: 'center',
+    }
   });
 
   useEffect(() => {
@@ -141,7 +190,7 @@ const ProductDetailsScreen = () => {
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <Text style={{ color: colors.text, fontSize: 20 }}>Product not found.</Text>
+          <Text style={styles.productNotFound}>Product not found.</Text>
         </View>
       </SafeAreaView>
     );
@@ -158,7 +207,7 @@ const ProductDetailsScreen = () => {
           }]}
           onPress={() => navigation.goBack()}
         >
-          <Text style={{ fontSize: 26, fontWeight: 'bold', color: colors.text }}>←</Text>
+          <Text style={styles.backButtonText}>←</Text>
         </TouchableOpacity>
         
         <TouchableOpacity
@@ -166,7 +215,7 @@ const ProductDetailsScreen = () => {
           onPress={toggleTheme}
           activeOpacity={0.7}
         >
-          <Text style={{ color: '#fff', fontSize: 20 }}>
+          <Text style={styles.themeToggleText}>
             {isDarkMode ? '🌞' : '🌙'}
           </Text>
         </TouchableOpacity>
@@ -198,50 +247,63 @@ const ProductDetailsScreen = () => {
             <View style={{ 
               width: dimensions.width > dimensions.height ? '50%' : '100%',
               aspectRatio: 1,
-              borderRadius: 12,
-              overflow: 'hidden',
-              backgroundColor: colors.inputBackground,
-              elevation: 4,
             }}>
-              <Image
-                source={{ uri: product.images[0].url }}
-                style={{ width: '100%', height: '100%' }}
-                resizeMode="cover"
-              />
+              {product.images && product.images.length > 0 ? (
+                <Image 
+                  source={{ uri: product.images[0].url }} 
+                  style={styles.image} 
+                  resizeMode="cover" 
+                />
+              ) : (
+                <View style={[styles.image, { 
+                  justifyContent: 'center', 
+                  alignItems: 'center',
+                  backgroundColor: colors.inputBackground
+                }]}>
+                  <Text style={styles.noImageText}>
+                    No image available
+                  </Text>
+                </View>
+              )}
             </View>
 
             {/* Product Details Section */}
             <View style={{ 
-              flex: dimensions.width > dimensions.height ? 1 : undefined,
-              width: dimensions.width > dimensions.height ? '50%' : '100%',
-              gap: spacing.md,
+              width: dimensions.width > dimensions.height ? '45%' : '100%',
+              flexShrink: 1,
             }}>
-              <Text style={styles.heading}>{product.title}</Text>
-              <Text style={[styles.text, { color: colors.primary, fontSize: 24, fontWeight: 'bold' }]}>
-                ${product.price}
-              </Text>
-              <Text style={styles.text}>{product.description}</Text>
-
-              <View style={{ flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md }}>
-                <TouchableOpacity
-                  style={[styles.button, { flex: 1 }]}
-                  onPress={() => {
-                    // Handle add to cart
-                  }}
-                >
+              <Text style={styles.category}>{product.category || 'Electronics'}</Text>
+              <Text style={styles.title}>{product.title}</Text>
+              <Text style={styles.price}>${product.price.toFixed(2)}</Text>
+              <Text style={styles.description}>{product.description}</Text>
+              
+              <View style={styles.buttonRow}>
+                <TouchableOpacity style={styles.button}>
                   <Text style={styles.buttonText}>Add to Cart</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.button, { flex: 1, backgroundColor: colors.primary }]}
-                  onPress={() => {
-                    // Handle buy now
-                  }}
-                >
-                  <Text style={[styles.buttonText, { color: '#fff' }]}>Buy Now</Text>
+                <TouchableOpacity style={styles.buyNowButton}>
+                  <Text style={styles.buyNowText}>Buy Now</Text>
                 </TouchableOpacity>
               </View>
             </View>
           </View>
+
+          {dropdownVisible && (
+            <View style={styles.dropdown}>
+              <Pressable style={styles.dropdownItem} onPress={() => {
+                // Handle share action
+                setDropdownVisible(false);
+              }}>
+                <Text style={styles.dropdownText}>Share</Text>
+              </Pressable>
+              <Pressable style={styles.dropdownItem} onPress={() => {
+                // Handle favorite action
+                setDropdownVisible(false);
+              }}>
+                <Text style={styles.dropdownText}>Add to Favorites</Text>
+              </Pressable>
+            </View>
+          )}
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>

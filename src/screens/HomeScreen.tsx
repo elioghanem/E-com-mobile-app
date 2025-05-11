@@ -19,6 +19,7 @@ import BottomTabBar from '../components/BottomTabBar';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import ProductCard from '../components/ProductCard';
+import { FONTS } from '../theme/fonts';
 
 const { width } = Dimensions.get('window');
 
@@ -33,7 +34,7 @@ const FILTERS = [
 const CARD_WIDTH = (width - spacing.md * 3) / 2;
 
 const HomeScreen = () => {
-  const { colors, isDarkMode, toggleTheme } = useTheme();
+  const { colors, isDarkMode, toggleTheme, typography } = useTheme();
   const styles = createStyles(colors);
   const products = productsData.data;
   const [selectedFilter, setSelectedFilter] = useState(FILTERS[0]);
@@ -41,6 +42,69 @@ const HomeScreen = () => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
+
+  const customStyles = StyleSheet.create({
+    pageTitle: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 24,
+      fontWeight: 'bold',
+      color: colors.text,
+    },
+    themeToggleText: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 20,
+      color: colors.text,
+    },
+    userIcon: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 18,
+      color: colors.text, 
+    },
+    searchIcon: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 18,
+      marginRight: 8,
+      color: colors.text + '99',
+    },
+    searchInput: {
+      fontFamily: FONTS.primary.regular,
+      flex: 1,
+      fontSize: 16,
+      color: colors.text,
+    },
+    filterText: {
+      fontFamily: FONTS.primary.regular,
+      fontWeight: 'bold',
+      color: colors.text,
+      fontSize: 15,
+      flexShrink: 1,
+      textAlign: 'center',
+      minWidth: 0,
+      maxWidth: 120,
+      flexWrap: 'wrap',
+    },
+    filterTextActive: {
+      fontFamily: FONTS.primary.regular,
+      fontWeight: 'bold',
+      color: '#fff',
+      fontSize: 15,
+      flexShrink: 1,
+      textAlign: 'center',
+      minWidth: 0,
+      maxWidth: 120,
+      flexWrap: 'wrap',
+    },
+    dropdownText: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      color: colors.text,
+    },
+    dropdownTextSignOut: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      color: colors.error,
+    },
+  });
 
   const renderItem = ({ item }: any) => (
     <TouchableOpacity
@@ -55,7 +119,7 @@ const HomeScreen = () => {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}> 
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.md, marginBottom: spacing.md }}>
-        <Text style={[styles.heading, { fontSize: 24 }]}>{'Discover Products'}</Text>
+        <Text style={customStyles.pageTitle}>Discover Products</Text>
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <TouchableOpacity
             style={{
@@ -70,14 +134,14 @@ const HomeScreen = () => {
             }}
             onPress={toggleTheme}
           >
-            <Text style={{ fontSize: 20, color: colors.text }}>{isDarkMode ? '🌞' : '🌙'}</Text>
+            <Text style={customStyles.themeToggleText}>{isDarkMode ? '🌞' : '🌙'}</Text>
           </TouchableOpacity>
           <View>
             <TouchableOpacity
               style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: colors.inputBackground, overflow: 'hidden', alignItems: 'center', justifyContent: 'center' }}
               onPress={() => setDropdownVisible((v) => !v)}
             >
-              <Text style={{ fontSize: 18, color: colors.text }}>👤</Text>
+              <Text style={customStyles.userIcon}>👤</Text>
             </TouchableOpacity>
             {dropdownVisible && (
               <View style={[localStyles.dropdown, { backgroundColor: colors.inputBackground, shadowColor: colors.text }] }>
@@ -85,7 +149,7 @@ const HomeScreen = () => {
                   style={localStyles.dropdownItem}
                   onPress={() => setDropdownVisible(false)}
                 >
-                  <Text style={[localStyles.dropdownText, { color: colors.text }]}>View Profile</Text>
+                  <Text style={customStyles.dropdownText}>View Profile</Text>
                 </Pressable>
                 <Pressable
                   style={localStyles.dropdownItem}
@@ -94,7 +158,7 @@ const HomeScreen = () => {
                     (navigation as any).navigate('SignUp');
                   }}
                 >
-                  <Text style={[localStyles.dropdownText, { color: colors.error }]}>Sign Out</Text>
+                  <Text style={customStyles.dropdownTextSignOut}>Sign Out</Text>
                 </Pressable>
               </View>
             )}
@@ -103,9 +167,9 @@ const HomeScreen = () => {
       </View>
       <View style={{ paddingHorizontal: spacing.md, marginBottom: spacing.md }}>
         <View style={[localStyles.searchBar, { backgroundColor: colors.inputBackground }]}>
-          <Text style={{ fontSize: 18, marginRight: 8, color: colors.text + '99' }}>🔍</Text>
+          <Text style={customStyles.searchIcon}>🔍</Text>
           <TextInput
-            style={{ flex: 1, fontSize: 16, color: colors.text }}
+            style={customStyles.searchInput}
             placeholder="Search"
             placeholderTextColor={colors.text + '99'}
             value={search}
@@ -126,16 +190,9 @@ const HomeScreen = () => {
             activeOpacity={0.7}
             onPress={() => setSelectedFilter(filter)}
           >
-            <Text style={{
-              fontWeight: 'bold',
-              color: selectedFilter === filter ? '#fff' : colors.text,
-              fontSize: 15,
-              flexShrink: 1,
-              textAlign: 'center',
-              minWidth: 0,
-              maxWidth: 120,
-              flexWrap: 'wrap',
-            }}>{filter}</Text>
+            <Text style={selectedFilter === filter ? customStyles.filterTextActive : customStyles.filterText}>
+              {filter}
+            </Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -232,10 +289,6 @@ const localStyles = StyleSheet.create({
   dropdownItem: {
     paddingVertical: 12,
     paddingHorizontal: 18,
-  },
-  dropdownText: {
-    fontSize: 16,
-    color: '#333',
   },
 });
 

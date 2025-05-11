@@ -7,6 +7,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import { useForm, Controller } from 'react-hook-form';
@@ -17,6 +18,7 @@ import { createStyles, spacing } from '../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
+import { FONTS, FONT_WEIGHTS } from '../theme/fonts';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -26,7 +28,7 @@ const loginSchema = z.object({
 type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginScreen = () => {
-  const { colors, isDarkMode, toggleTheme } = useTheme();
+  const { colors, isDarkMode, toggleTheme, typography } = useTheme();
   const styles = createStyles(colors);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -71,6 +73,79 @@ const LoginScreen = () => {
     }
   };
 
+  const customStyles = StyleSheet.create({
+    pageTitle: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 32,
+      fontWeight: FONT_WEIGHTS.bold,
+      color: colors.text,
+      marginBottom: spacing.md,
+    },
+    welcomeText: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      fontWeight: FONT_WEIGHTS.medium,
+      color: colors.secondary,
+      marginBottom: spacing.md,
+    },
+    labelText: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      fontWeight: FONT_WEIGHTS.regular,
+      color: colors.text,
+      marginBottom: spacing.xs,
+    },
+    inputField: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      backgroundColor: colors.background,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 10,
+      padding: spacing.md,
+      color: colors.text,
+    },
+    errorMessage: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 14,
+      color: colors.error,
+      marginTop: spacing.xs,
+    },
+    loginButton: {
+      backgroundColor: colors.primary,
+      padding: spacing.md,
+      borderRadius: 12,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: spacing.lg,
+    },
+    buttonLabel: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      fontWeight: FONT_WEIGHTS.medium,
+      color: '#FFFFFF',
+    },
+    signupLink: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 16,
+      color: colors.primary,
+      textAlign: 'center',
+    },
+    themeToggleText: {
+      fontFamily: FONTS.primary.regular,
+      color: '#fff',
+      fontSize: 20,
+    },
+    eyeIcon: {
+      position: 'absolute',
+      right: 12,
+    },
+    eyeIconText: {
+      fontFamily: FONTS.primary.regular,
+      fontSize: 24,
+    },
+  });
+
   return (
     <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}>
       <TouchableOpacity
@@ -86,7 +161,7 @@ const LoginScreen = () => {
         onPress={toggleTheme}
         activeOpacity={0.7}
       >
-        <Text style={{ color: '#fff', fontSize: 20 }}>
+        <Text style={customStyles.themeToggleText}>
           {isDarkMode ? '🌞' : '🌙'}
         </Text>
       </TouchableOpacity>
@@ -108,7 +183,8 @@ const LoginScreen = () => {
           showsVerticalScrollIndicator={false}
           bounces={false}
         >
-          <Text style={styles.heading}>Login</Text>
+          <Text style={customStyles.pageTitle}>Login</Text>
+          <Text style={customStyles.welcomeText}>Welcome back! Please sign in to continue.</Text>
 
           <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
             <Controller
@@ -116,9 +192,9 @@ const LoginScreen = () => {
               name="email"
               render={({ field: { onChange, value } }) => (
                 <View>
-                  <Text style={styles.text}>Email</Text>
+                  <Text style={customStyles.labelText}>Email</Text>
                   <TextInput
-                    style={styles.input}
+                    style={customStyles.inputField}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your email"
@@ -128,7 +204,7 @@ const LoginScreen = () => {
                     returnKeyType="next"
                   />
                   {errors.email && (
-                    <Text style={styles.errorText}>{errors.email.message}</Text>
+                    <Text style={customStyles.errorMessage}>{errors.email.message}</Text>
                   )}
                 </View>
               )}
@@ -139,10 +215,10 @@ const LoginScreen = () => {
               name="password"
               render={({ field: { onChange, value } }) => (
                 <View>
-                  <Text style={styles.text}>Password</Text>
+                  <Text style={customStyles.labelText}>Password</Text>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <TextInput
-                      style={[styles.input, { flex: 1 }]}
+                      style={[customStyles.inputField, { flex: 1 }]}
                       onChangeText={onChange}
                       value={value}
                       placeholder="Enter your password"
@@ -152,15 +228,15 @@ const LoginScreen = () => {
                     />
                     <TouchableOpacity
                       onPress={() => setShowPassword((prev) => !prev)}
-                      style={{ position: 'absolute', right: 12 }}
+                      style={customStyles.eyeIcon}
                     >
-                      <Text style={{ fontSize: 24 }}>
+                      <Text style={customStyles.eyeIconText}>
                         {showPassword ? '🙈' : '👁️'}
                       </Text>
                     </TouchableOpacity>
                   </View>
                   {errors.password && (
-                    <Text style={styles.errorText}>{errors.password.message}</Text>
+                    <Text style={customStyles.errorMessage}>{errors.password.message}</Text>
                   )}
                 </View>
               )}
@@ -168,21 +244,21 @@ const LoginScreen = () => {
 
             {/* Show login error message */}
             {errorMessage !== '' && (
-              <Text style={[styles.errorText, { marginTop: 10 }]}>{errorMessage}</Text>
+              <Text style={[customStyles.errorMessage, { marginTop: 10 }]}>{errorMessage}</Text>
             )}
 
             <TouchableOpacity
-              style={[styles.button, { marginTop: spacing.md }]}
+              style={customStyles.loginButton}
               onPress={handleSubmit(onSubmit)}
             >
-              <Text style={styles.buttonText}>Login</Text>
+              <Text style={customStyles.buttonLabel}>Login</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={{ marginTop: spacing.lg, alignItems: 'center' }}
               onPress={() => (navigation as any).navigate('SignUp', { fromLogin: true })}
             >
-              <Text style={[styles.text, { color: colors.primary }]}>
+              <Text style={customStyles.signupLink}>
                 Don't have an account? Sign Up
               </Text>
             </TouchableOpacity>

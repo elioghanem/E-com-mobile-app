@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
+  StyleSheet,
 } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -16,6 +17,7 @@ import { useTheme } from '../context/ThemeContext';
 import { createStyles, spacing } from '../styles/globalStyles';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FONTS } from '../theme/fonts';
 
 // Define the validation schema
 const signUpSchema = z.object({
@@ -36,7 +38,7 @@ const signUpSchema = z.object({
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 const SignUpScreen = () => {
-  const { colors, isDarkMode, toggleTheme } = useTheme();
+  const { colors, isDarkMode, toggleTheme, typography } = useTheme();
   const styles = createStyles(colors);
   const navigation = useNavigation();
   const insets = useSafeAreaInsets();
@@ -69,6 +71,50 @@ const SignUpScreen = () => {
     // Handle sign up logic here
   };
 
+  const customStyles = StyleSheet.create({
+    pageTitle: {
+      ...typography.h1,
+      color: colors.text,
+      marginBottom: spacing.md,
+    },
+    labelText: {
+      ...typography.bodyMedium,
+      color: colors.text,
+      marginBottom: spacing.xs,
+    },
+    customButton: {
+      backgroundColor: colors.primary,
+      padding: spacing.md,
+      borderRadius: 12,
+      alignItems: 'center',
+      justifyContent: 'center',
+      marginTop: spacing.lg,
+    },
+    buttonLabel: {
+      ...typography.button,
+      color: '#FFFFFF',
+    },
+    inputField: {
+      ...typography.bodyMedium,
+      backgroundColor: colors.background,
+      borderWidth: 1.5,
+      borderColor: colors.border,
+      borderRadius: 10,
+      padding: spacing.md,
+      color: colors.text,
+    },
+    errorMessage: {
+      ...typography.bodySmall,
+      color: colors.error,
+      marginTop: spacing.xs,
+    },
+    loginLink: {
+      ...typography.bodyMedium,
+      color: colors.primary,
+      textAlign: 'center',
+    },
+  });
+
   return (
     <SafeAreaView style={[styles.container, { paddingTop: insets.top }]}> 
       <TouchableOpacity
@@ -83,7 +129,7 @@ const SignUpScreen = () => {
         }}
         onPress={toggleTheme}
       >
-        <Text style={{ color: '#fff', fontSize: 20 }}>{isDarkMode ? '🌞' : '🌙'}</Text>
+        <Text style={{ color: '#fff', fontSize: 20, fontFamily: FONTS.primary.regular }}>{isDarkMode ? '🌞' : '🌙'}</Text>
       </TouchableOpacity>
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -102,7 +148,7 @@ const SignUpScreen = () => {
           showsVerticalScrollIndicator={false}
           bounces={false}
         >
-          <Text style={styles.heading}>Create Account</Text>
+          <Text style={customStyles.pageTitle}>Create Account</Text>
 
           <View style={{ gap: spacing.md, marginTop: spacing.lg }}>
             <Controller
@@ -110,16 +156,16 @@ const SignUpScreen = () => {
               name="name"
               render={({ field: { onChange, value } }) => (
                 <View>
-                  <Text style={styles.text}>Name</Text>
+                  <Text style={customStyles.labelText}>Name</Text>
                   <TextInput
-                    style={styles.input}
+                    style={customStyles.inputField}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your name"
                     placeholderTextColor={colors.border}
                   />
                   {errors.name && (
-                    <Text style={styles.errorText}>{errors.name.message}</Text>
+                    <Text style={customStyles.errorMessage}>{errors.name.message}</Text>
                   )}
                 </View>
               )}
@@ -130,9 +176,9 @@ const SignUpScreen = () => {
               name="email"
               render={({ field: { onChange, value } }) => (
                 <View>
-                  <Text style={styles.text}>Email</Text>
+                  <Text style={customStyles.labelText}>Email</Text>
                   <TextInput
-                    style={styles.input}
+                    style={customStyles.inputField}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your email"
@@ -141,7 +187,7 @@ const SignUpScreen = () => {
                     autoCapitalize="none"
                   />
                   {errors.email && (
-                    <Text style={styles.errorText}>{errors.email.message}</Text>
+                    <Text style={customStyles.errorMessage}>{errors.email.message}</Text>
                   )}
                 </View>
               )}
@@ -152,9 +198,9 @@ const SignUpScreen = () => {
               name="password"
               render={({ field: { onChange, value } }) => (
                 <View>
-                  <Text style={styles.text}>Password</Text>
+                  <Text style={customStyles.labelText}>Password</Text>
                   <TextInput
-                    style={styles.input}
+                    style={customStyles.inputField}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your password"
@@ -162,7 +208,7 @@ const SignUpScreen = () => {
                     secureTextEntry
                   />
                   {errors.password && (
-                    <Text style={styles.errorText}>{errors.password.message}</Text>
+                    <Text style={customStyles.errorMessage}>{errors.password.message}</Text>
                   )}
                 </View>
               )}
@@ -173,9 +219,9 @@ const SignUpScreen = () => {
               name="phoneNumber"
               render={({ field: { onChange, value } }) => (
                 <View>
-                  <Text style={styles.text}>Phone Number</Text>
+                  <Text style={customStyles.labelText}>Phone Number</Text>
                   <TextInput
-                    style={styles.input}
+                    style={customStyles.inputField}
                     onChangeText={onChange}
                     value={value}
                     placeholder="Enter your phone number"
@@ -183,7 +229,7 @@ const SignUpScreen = () => {
                     keyboardType="phone-pad"
                   />
                   {errors.phoneNumber && (
-                    <Text style={styles.errorText}>
+                    <Text style={customStyles.errorMessage}>
                       {errors.phoneNumber.message}
                     </Text>
                   )}
@@ -192,17 +238,17 @@ const SignUpScreen = () => {
             />
 
             <TouchableOpacity
-              style={[styles.button, { marginTop: spacing.md }]}
+              style={customStyles.customButton}
               onPress={handleSubmit(onSubmit)}
             >
-              <Text style={styles.buttonText}>Sign Up</Text>
+              <Text style={customStyles.buttonLabel}>Sign Up</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
               style={{ marginTop: spacing.lg, alignItems: 'center' }}
-              onPress={() => (navigation as any).navigate('Login', { fromSignUp: true })}
+              onPress={() => (navigation as any).navigate('Login')}
             >
-              <Text style={[styles.text, { color: colors.primary }]}>
+              <Text style={customStyles.loginLink}>
                 Already have an account? Login
               </Text>
             </TouchableOpacity>

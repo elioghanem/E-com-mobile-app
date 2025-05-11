@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions, PixelRatio } from 'react-native';
 import { ThemeColors } from '../context/ThemeContext';
+import { FONTS } from '../theme/fonts';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -31,16 +32,19 @@ export const createStyles = (colors: ThemeColors) => StyleSheet.create({
     padding: spacing.md,
   },
   text: {
+    fontFamily: FONTS.primary.regular,
     color: colors.text,
     fontSize: normalize(16),
   },
   heading: {
+    fontFamily: FONTS.primary.regular,
     color: colors.text,
     fontSize: normalize(24),
     fontWeight: 'bold',
     marginBottom: spacing.md,
   },
   subheading: {
+    fontFamily: FONTS.primary.regular,
     color: colors.text,
     fontSize: normalize(18),
     fontWeight: '600',
@@ -54,11 +58,13 @@ export const createStyles = (colors: ThemeColors) => StyleSheet.create({
     justifyContent: 'center',
   },
   buttonText: {
+    fontFamily: FONTS.primary.regular,
     color: '#FFFFFF',
     fontSize: normalize(16),
     fontWeight: '600',
   },
   input: {
+    fontFamily: FONTS.primary.regular,
     backgroundColor: colors.background,
     borderWidth: 1,
     borderColor: colors.border,
@@ -93,6 +99,7 @@ export const createStyles = (colors: ThemeColors) => StyleSheet.create({
     justifyContent: 'space-between',
   },
   errorText: {
+    fontFamily: FONTS.primary.regular,
     color: colors.error,
     fontSize: normalize(14),
     marginTop: spacing.xs,
